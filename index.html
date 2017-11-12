@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自由之路$_$</title>
+	<link rel="stylesheet" href="src/css/style.css" />
+	<script>
+		// window.nodeRequire = require;
+	</script>
+</head>
+<body>
+	<div class="freedom-wraper">
+		<div class="freedom-time">
+			<ul>
+				<li>北京时间：<span class="bjtime"></span></li>
+				<li>纽约时间：<span class="nytime"></span></li>
+			</ul>
+		</div>
+		<div class="freedom-header">
+			<ul>
+				<li>
+					<p>我的资产总额:</p>
+					<p class="amount total-amount" id="js-allUsd"><!-- 10000 --></p>
+				</li>
+				<li>
+					<p>持有币种个数:</p>
+					<p class="amount b-count" id="js-bcount"></p>
+				</li>
+				<li>
+					<p>币种额定仓位: </p>
+					<p class="amount rated-amount">
+						<span class="rated-money" id="js-ratedmoney"></span><button class="repair hide" id='js-repair'>修改</button>
+					</p>
+				</li>
+				<li>
+					<p>总盈亏:</p>
+					<p class="amount total-loss"><!-- -100 --></p>
+				</li>
+				<li class="hide">
+					<p>总盈利:</p>
+					<p class="amount total-profit"><!-- +200 --></p>
+				</li>
+			</ul>
+		</div>
+		<div class="freedom-money">
+			可用余额： <span id="js-usd"></span><button class="xdbtn hide" id="js-xdbtn">下单</button>
+			<div class="setmoney" id="js-ratedamount"><input type="text" class="ratedinput" id="js-ratedinput" /><button class="ratedbtn hide" id="js-ratedbtn">分配资产</button></div>
+		</div>
+		<div class="freedom-main">
+			<div class="freedom-main-head">
+				<ul>
+					<li>币种</li>
+					<li>持币数量</li>
+					<li>当前价值</li>
+					<li>涨跌额</li>
+					<li>涨跌幅</li>
+				</ul>
+			</div>
+			<div class="freedom-main-list" id="js-list">
+				<!-- <ul class="up">
+					<li>btc</li>
+					<li>1300</li>
+					<li>+300</li>
+					<li>+10%</li>
+				</ul> -->
+			</div>
+		</div>
+	</div>
+
+	<div class="configuration-wraper" id="mask">
+		<div class="kind">添加币种：<input type="text" id="addinput" value='eth,etc,omg'></div>
+		<div class="example">如：btc,ltc,eth</div>
+		<button id="addbtn">添加</button>
+	</div>
+	
+
+	<script src="src/js/index.js"></script>
+</body>
+</html>
