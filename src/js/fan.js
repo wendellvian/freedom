@@ -120,6 +120,9 @@ function getAccountInfo(isDebug) {
             };
             if (resJson instanceof Array) {
                 retData.result = "success";
+                if (resJson.length === 0) {
+                    retData["usd"] = 0;
+                }
                 resJson.forEach(function(item){
                     if (item.type == "exchange") {
                         retData[item.currency] = parseFloat(item.amount);
