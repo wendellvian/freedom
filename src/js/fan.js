@@ -319,6 +319,5 @@ module.exports = {
     getAccountInfo: getAccountInfo,
     getCoinBook: getCoinBook,
     sellCoin: sellCoin,
-    buyCoin: buyCoin,
-    getCoinIncrease: getCoinIncrease
+    buyCoin: buyCoin
 };
