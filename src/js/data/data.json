@@ -1,0 +1,24 @@
+{
+    "totalAsset": 0,
+    "singleCoinMoneyAmt": 1000,
+    "totalEarnUsd": 50,
+    "balance": {
+        "usd": 0,
+        "eth": 0,
+        "btc": 0,
+        "bch": 0
+    },
+    "coinList": [{
+        "name": "btc",
+        "count": 0,
+        "price": 100
+    },{
+        "name": "eth",
+        "count": 0,
+        "price": 100
+    },{
+        "name": "bch",
+        "count": 0,
+        "price": 100
+    }]
+}

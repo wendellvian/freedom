@@ -4,11 +4,9 @@
 	<meta charset="UTF-8">
 	<title>自由之路$_$</title>
 	<link rel="stylesheet" href="src/css/style.css" />
-	<script>
-		// window.nodeRequire = require;
-	</script>
 </head>
 <body>
+<div id="container">
 	<div class="freedom-wraper">
 		<div class="freedom-time">
 			<ul>
@@ -20,21 +18,21 @@
 			<ul>
 				<li>
 					<p>我的资产总额:</p>
-					<p class="amount total-amount" id="js-allUsd"><!-- 10000 --></p>
+					<p class="amount total-amount" id="js-allUsd">{{data.totalAsset}}</p>
 				</li>
 				<li>
 					<p>持有币种个数:</p>
-					<p class="amount b-count" id="js-bcount"></p>
+					<p class="amount b-count" id="js-bcount">{{data.coinList.length}}</p>
 				</li>
 				<li>
 					<p>币种额定仓位: </p>
 					<p class="amount rated-amount">
-						<span class="rated-money" id="js-ratedmoney"></span><button class="repair hide" id='js-repair'>修改</button>
+						<span class="rated-money" id="js-ratedmoney">{{data.singleCoinMoneyAmt}}</span><button class="repair hide" id='js-repair'>修改</button>
 					</p>
 				</li>
 				<li>
 					<p>总盈亏:</p>
-					<p class="amount total-loss"><!-- -100 --></p>
+					<p class="amount total-loss">{{data.totalEarnUsd}}</p>
 				</li>
 				<li class="hide">
 					<p>总盈利:</p>
@@ -43,7 +41,7 @@
 			</ul>
 		</div>
 		<div class="freedom-money">
-			可用余额： <span id="js-usd"></span><button class="xdbtn hide" id="js-xdbtn">下单</button>
+			可用余额： <span id="js-usd">{{data.balance.usd}}</span><button class="xdbtn hide" id="js-xdbtn">下单</button>
 			<div class="setmoney" id="js-ratedamount"><input type="text" class="ratedinput" id="js-ratedinput" /><button class="ratedbtn hide" id="js-ratedbtn">分配资产</button></div>
 		</div>
 		<div class="freedom-main">
@@ -57,23 +55,26 @@
 				</ul>
 			</div>
 			<div class="freedom-main-list" id="js-list">
-				<!-- <ul class="up">
-					<li>btc</li>
-					<li>1300</li>
-					<li>+300</li>
-					<li>+10%</li>
-				</ul> -->
+				<ul v-for="item in data.coinList">
+					<li>{{item.name}}</li>
+					<li>{{item.count}}</li>
+					<li>{{item.count * item.price}}</li>
+					<li></li>
+				</ul>
 			</div>
 		</div>
 	</div>
 
 	<div class="configuration-wraper" id="mask">
-		<div class="kind">添加币种：<input type="text" id="addinput" value='eth,etc,omg'></div>
+		<div class="kind">添加币种：<input type="text" id="addinput" v-model="strCoins"></div>
 		<div class="example">如：btc,ltc,eth</div>
-		<button id="addbtn">添加</button>
+		<button id="addbtn" @click="addCoin">添加</button>
 	</div>
 	
-
-	<script src="src/js/index.js"></script>
+	<script>
+		var index = require("./src/js/index.js");
+		index.init();
+	</script>
+</div>
 </body>
 </html>

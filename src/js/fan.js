@@ -1,5 +1,5 @@
 var _crypto = require("crypto"),
-    _key = require("./key.json");
+    _key = require("./data/key.json");
     _log = require("./log.js");
 
 var _publicKey = _key.publicKey,
