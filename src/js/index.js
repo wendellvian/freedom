@@ -145,9 +145,9 @@ function init() {
 				var cloneCoinList = [];
 				var _coinPingCangPos = 0;
 				_data.coinList.forEach(function(coinItem){
-					if (coinItem.name !== "xrp") {
+					//if (coinItem.name !== "xrp") {
 						cloneCoinList.push(coinItem);
-					}
+					//}
 				});
 
 				//按当天收益金额大小排序，以免后面的币不够钱买
@@ -157,12 +157,15 @@ function init() {
 
 				var startPingCang = function() {
 					return self.pingCangSingleCoin(cloneCoinList[_coinPingCangPos]).then(function(){
-						_coinPingCangPos += 1;
-						startPingCang();
+						
+						if (_coinPingCangPos < cloneCoinList.length - 1) {
+							_coinPingCangPos += 1;
+							return startPingCang();
+						}
 					});
 				}
 
-				return startPingCang();
+				return _fan.getAccountInfo().then(startPingCang).then(_fan.getAccountInfo);
 			},
 			/**
 			 * 添加币种

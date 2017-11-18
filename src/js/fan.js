@@ -217,7 +217,9 @@ function _addOrder(coinName, type, price, count, isDebug) {
             result: "fail"
         };
         if (resJson.id) {
-            return _queryOrder(coinName, resJson.id);
+            retData.result === "success";
+            return retData;
+            //return _queryOrder(coinName, resJson.id);
         }
         else {
             return retData;
@@ -288,7 +290,7 @@ function buyCoin(coinName, moneyAmt, objPrice, isDebug) {
     var start = function(){
         return getCoinBook(coinName).then(_buyCoin);
     };
-    
+
     if (!_coinInfo[coinName]) {
         return getCoinInfo().then(function(){
             if (objPrice) {
