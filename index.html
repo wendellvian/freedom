@@ -10,65 +10,73 @@
 	<div class="freedom-wraper">
 		<div class="freedom-time">
 			<ul>
-				<li>北京时间：<span class="bjtime"></span></li>
-				<li>纽约时间：<span class="nytime"></span></li>
+				<!--<li>当前时间：<span class="bjtime"></span></li>-->
+				<li>结算时间：<input placeholder="如10:00,22:00" type="text" v-model="data.dealTime"/></li>
+				<li>投资金额(usd)：<input placeholder="如10:00,22:00" type="text" v-model.number="data.investMoney"/></li>
 			</ul>
 		</div>
 		<div class="freedom-header">
 			<ul>
 				<li>
 					<p>我的资产总额:</p>
-					<p class="amount total-amount" id="js-allUsd">{{data.totalAsset}}</p>
+					<p class="amount total-amount" id="js-allUsd">{{totalAsset}}</p>
+				</li>
+				<li>
+					<p>可用余额:</p>
+					<p class="amount total-loss">{{data.balance.usd}}</p>
 				</li>
 				<li>
 					<p>持有币种个数:</p>
 					<p class="amount b-count" id="js-bcount">{{data.coinList.length}}</p>
 				</li>
 				<li>
-					<p>币种额定仓位: </p>
+					<p>币种额定仓位(美元): </p>
 					<p class="amount rated-amount">
 						<span class="rated-money" id="js-ratedmoney">{{data.singleCoinMoneyAmt}}</span><button class="repair hide" id='js-repair'>修改</button>
 					</p>
 				</li>
 				<li>
 					<p>总盈亏:</p>
-					<p class="amount total-loss">{{data.totalEarnUsd}}</p>
-				</li>
-				<li class="hide">
-					<p>总盈利:</p>
-					<p class="amount total-profit"><!-- +200 --></p>
+					<p class="amount total-loss" :class="{'total-loss': totalAsset - data.investMoney < 0, 'total-profit': totalAsset - data.investMoney>= 0}">{{totalAsset - data.investMoney}}</p>
 				</li>
 			</ul>
 		</div>
-		<div class="freedom-money">
-			可用余额： <span id="js-usd">{{data.balance.usd}}</span><button class="xdbtn hide" id="js-xdbtn">下单</button>
-			<div class="setmoney" id="js-ratedamount"><input type="text" class="ratedinput" id="js-ratedinput" /><button class="ratedbtn hide" id="js-ratedbtn">分配资产</button></div>
-		</div>
 		<div class="freedom-main">
-			<div class="freedom-main-head">
-				<ul>
-					<li>币种</li>
-					<li>持币数量</li>
-					<li>当前价值</li>
-					<li>涨跌额</li>
-					<li>涨跌幅</li>
-				</ul>
-			</div>
-			<div class="freedom-main-list" id="js-list">
-				<ul v-for="item in data.coinList">
-					<li>{{item.name}}</li>
-					<li>{{item.count}}</li>
-					<li>{{item.count * item.price}}</li>
-					<li></li>
-				</ul>
-			</div>
+			<table>
+				<thead>
+					<tr><th>币种</th><th>持币数量</th><th>当前价格</th><th>当前价值</th><th>涨跌额</th><th>涨跌幅</th><th>平仓</th></tr>
+				</thead>
+				<tbody>
+					<tr v-for="item in data.coinList">
+						<td>{{item.name}}</td>
+						<td>{{item.count}}</td>
+						<td>{{item.price}}</td>
+						<td>{{item.count * item.price}}</td>
+						<td>{{item.lastDealPrice > 0 ? item.price - item.lastDealPrice : "N/A"}}</td>
+						<td>{{item.lastDealPrice > 0 ? (item.price - item.lastDealPrice)/item.lastDealPrice : "N/A"}}</td>
+						<td><button v-if="item.name != dealingCoinName" @click="pingCangSingleCoin(item)">平仓(买卖至设定仓位)</button><span v-if="item.name == dealingCoinName">平仓中...</span></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
-	<div class="configuration-wraper" id="mask">
-		<div class="kind">添加币种：<input type="text" id="addinput" v-model="strCoins"></div>
-		<div class="example">如：btc,ltc,eth</div>
-		<button id="addbtn" @click="addCoin">添加</button>
+	<div class="configuration-wraper flex" id="mask">
+		<div class="kind flex flex-v-center">
+			<div>添加币种：</div>
+			<input type="text" id="addinput" v-model="strCoins" placeholder="如btc,ltc,eth">
+			<button @click="addCoin">添加</button>
+		</div>
+		<div class="kind flex flex-v-center">
+			<div>每币固定持仓（美元）：</div>
+			<input type="text" id="addinput" v-model.number="cloneSingleCoinMoneyAmt" placeholder="如btc,ltc，务必正确！！">
+			<button @click="setCoinMoneyAmt">设定</button>
+			<button @click="pingCang">平仓(买卖至设定位)</button>
+		</div>
+		<div class="right flex-1">
+			<button @click="start">开始自动运行</button>
+			<button @click="stop">停止自动运行</button>
+		</div>
 	</div>
 	
 	<script>

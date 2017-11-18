@@ -231,13 +231,20 @@ function _addOrder(coinName, type, price, count, isDebug) {
  * @param {String} coinName 币种小写
  * @return {Object}
  */
-function getCoinBook(coinName, isDebug) {
+function getCoinBook(coinName, isDebug, tryCount) {
+    tryCount = tryCount || 3;
     var apiPath = "/v1/book/"+ coinName + "usd?limit_bids=3&limit_asks=3";
 
+    tryCount -= 1;
     return fetch(_baseUrl + apiPath, {
         method: "get"
     }).then(function(response){
-        return response.json();
+        try {
+            return response.json();
+        }
+        catch(e) {
+            return getCoinBook(coinName, isDebug, tryCount);
+        }
     }).then(function(resJson){
         var retData = {
             result: "fail"
@@ -248,6 +255,8 @@ function getCoinBook(coinName, isDebug) {
             retData.sell = parseFloat(resJson.asks[0].price);
         }
         return retData;
+    }).catch(function(e){
+        return getCoinBook(coinName, isDebug, tryCount);
     });
 }
 
@@ -257,29 +266,43 @@ function getCoinBook(coinName, isDebug) {
  * @param {Number} montyAmt 金额
  * @return {Object}
  */
-function buyCoin(coinName, moneyAmt, isDebug) {
+function buyCoin(coinName, moneyAmt, objPrice, isDebug) {
+    function _buyCoin(retData){
+        var buyPrice = retData.sell,
+            count = moneyAmt/buyPrice,
+            precision = _coinInfo[coinName].precision,
+            minOrderCount = _coinInfo[coinName].minCount;
+        _log.logApi(coinName + ": 准备buy, 金额:"+ moneyAmt +", 计算数量:"+ count +", 价格:"+ buyPrice);
+        if (count < minOrderCount) {
+                _log.logApi(coinName + ": 取消sell，原因是欲成交数量小于最小值"+ minOrderCount);
+            return {
+                result: "fail",
+                msg: coinName + "交易数量不能小于" + minOrderCount
+            };
+        }
+        //todo, minimal and decimal deal
+        return _addOrder(coinName, "buy", buyPrice.toFixed(precision), count.toFixed(precision));
+    }
+
+
     var start = function(){
-        return getCoinBook(coinName).then(function(retData){
-            var buyPrice = retData.sell,
-                count = moneyAmt/buyPrice,
-                precision = _coinInfo[coinName].precision,
-                minOrderCount = _coinInfo[coinName].precision;
-            _log.logApi(coinName + ": 准备buy, 金额:"+ moneyAmt +", 计算数量:"+ count +", 价格:"+ buyPrice);
-            if (count < minOrderCount) {
-                 _log.logApi(coinName + ": 取消sell，原因是欲成交数量小于最小值"+ minOrderCount);
-                return {
-                    result: "fail",
-                    msg: coinName + "交易数量不能小于" + minOrderCount
-                };
-            }
-            //todo, minimal and decimal deal
-            return _addOrder(coinName, "buy", buyPrice.toFixed(precision), count.toFixed(precision));
-        });
+        return getCoinBook(coinName).then(_buyCoin);
     };
+    
     if (!_coinInfo[coinName]) {
-        return getCoinInfo().then(start);
+        return getCoinInfo().then(function(){
+            if (objPrice) {
+                return _buyCoin(objPrice);
+            }
+            else {
+                return start();
+            }
+        });
     }
     else {
+        if (objPrice) {
+            return _buyCoin(objPrice);
+        }
         return start();
     }
     
@@ -297,7 +320,7 @@ function sellCoin(coinName, moneyAmt, isDebug) {
             var sellPrice = retData.buy,
                 count = moneyAmt/sellPrice,
                 precision = _coinInfo[coinName].precision,
-                minOrderCount = _coinInfo[coinName].precision;
+                minOrderCount = _coinInfo[coinName].minCount;
             _log.logApi(coinName + ": 准备sell, 金额:" + moneyAmt + ", 计算数量:" + count + ", 价格:" + sellPrice);
             if (count < minOrderCount) {
                  _log.logApi(coinName + ": 取消sell，原因是欲成交数量小于最小值" + minOrderCount);

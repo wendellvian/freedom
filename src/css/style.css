@@ -1,7 +1,13 @@
 body,ul,li,p{margin:0;padding:0;}
 li{list-style:none;}
-button{outline:none;}
+button{outline:none; cursor:pointer}
+input {text-indent: 10px}
+.right {text-align: right}
 .xdbtn{padding:3px 10px;margin:0 10px;background:#78ca14;color:#fff;border:0;border-radius:5px;font-size:12px;}
+.flex {display:flex}
+.flex-v-c {align-items: center}
+.flex-h-c {justify-content: center}
+.flex-1 {flex: 1}
 
 html,body{width:100%;height:100%;font-size:13px;}
 .show{display:block !important;}
@@ -13,7 +19,7 @@ html,body{width:100%;height:100%;font-size:13px;}
 .freedom-time li{-webkit-flex:1;flex:1;}
 
 .freedom-header{height:60px;border-bottom:4px solid #ddd;font-size:0;}
-.freedom-header ul{display:-webkit-flex;display:flex;}
+.freedom-header ul{display:-webkit-flex;display:flex; height: 30px;}
 .freedom-header li{display:inline-block;font-size:12px;padding:0 10px;border-left:1px solid #ddd;vertical-align:top;-webkit-flex:1;flex:1;}
 .freedom-header li p{display:block;height:30px;line-height:30px;}
 .freedom-header .amount{position:relative;font-weight:700;font-size:16px;}
@@ -24,12 +30,13 @@ html,body{width:100%;height:100%;font-size:13px;}
 .freedom-money{padding:10px;border-bottom:2px solid #ddd;position:relative;}
 .freedom-money .setmoney{position:absolute;right:10px;top:50%;transform:translateY(-50%);}
 
-.freedom-main{font-size:0;}
-.freedom-main li{display:inline-block;font-weight:700;font-size:14px;width:20%;box-sizing:border-box;padding:5px 10px;}
-.freedom-main .freedom-main-head{background:#f2f2f2;}
-.freedom-main .freedom-main-head li{font-size:12px;border-bottom:3px solid #ddd;}
-.freedom-main .freedom-main-list .up{color:rgba(112, 168, 0, 1);border-bottom:1px solid #ddd;}
-.freedom-main .freedom-main-list .down{color:rgba(168, 0, 0, 1);border-bottom:1px solid #ddd;}
+.freedom-main table{width: 100%; border-collapse: collapse; text-align: center;}
+.freedom-main thead tr {font-weight: bold; height: 40px; background: #EEE}
+.freedom-main tbody tr {border-bottom:1px dotted #DDD; height: 30px}
+.freedom-main tbody tr:hover {background: #EEE}
 
 
-.configuration-wraper{position:fixed;left:0;top:0;bottom:0;right:0;width:100%;height:100%;background:#f2f2f2;}
+.configuration-wraper{position:fixed; padding:10px; line-height:30px; left:0;bottom:0;width:100%;background:#f2f2f2; border-top:1px solid #DDD}
+.configuration-wraper > div {margin: 0 10px}
+.configuration-wraper input {height: 24px}
+.configuration-wraper button {padding:0 20px; height:30px}
